@@ -102,6 +102,21 @@
         Restart = "always";
       };
     };
+
+    trustolino-landing-page = {
+      description = "trustolino-landing-page";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
+
+      path = with pkgs; [ bash nodejs_22 ];
+
+      serviceConfig = {
+        User = "selim";
+        WorkingDirectory = "/opt/trustolino-landing-page";
+        ExecStart = "${pkgs.nodejs_22}/bin/npm run start";
+        Restart = "always";
+      };
+    };
   };
 
   services.nginx = {
@@ -153,6 +168,26 @@
           '';
         };
       };
+
+      "selimeser.de" = {
+        enableACME = true;
+        forceSSL = true;
+        globalRedirect = "www.selimeser.de";
+      };
+
+      "www.selimeser.de" = {
+        enableACME = true;
+        forceSSL = true;
+
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:3002";
+          proxyWebsockets = true;
+
+          extraConfig = ''
+            limit_req zone=perip burst=20 nodelay;
+          '';
+        };
+      };
     };
   };
 
@@ -164,6 +199,8 @@
       "www.latch-dating.de".email = "selim@latch-dating.de";
       "ws-boardinghouse.de".email = "info@ws-boardinghouse.de";
       "www.ws-boardinghouse.de".email = "info@ws-boardinghouse.de";
+      "selimeser.de".email = "selim@selimeser.de";
+      "www.selimeser.de".email = "selim@selimeser.de";
     };
   };
 
