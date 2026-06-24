@@ -16,4 +16,4 @@ NixOS installed on Hetzner Cloud Server via [Traditional ISO Installation](https
 - Network Hostname
 - ...
 ## Remote Deployment (Internet Connection on Machine required)
-```sudo nixos-rebuild switch --flake github:nowhip/hetzner-nixos#selims-server``` 
+```sudo nixos-rebuild switch --flake github:sejlim/hetzner-nixos#selims-server --refresh``` 
