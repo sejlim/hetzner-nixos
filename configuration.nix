@@ -152,7 +152,7 @@
         forceSSL = true;
 
         locations."/" = {
-          proxyPass = "http://127.0.0.1:3002";
+          proxyPass = "http://127.0.0.1:4173";
           proxyWebsockets = true;
 
           extraConfig = ''
