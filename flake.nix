@@ -1,17 +1,18 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     vscode-server.url = "github:nix-community/nixos-vscode-server";
+    zakkig.url = "github:sejlim/zakkig";
   };
 
-  outputs = { nixpkgs, vscode-server, ... }: {
+  outputs = { nixpkgs, vscode-server, zakkig, ... }: {
     nixosConfigurations = {
       selims-server = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
           ./configuration.nix
           vscode-server.nixosModules.default
-          { services.vscode-server.enable = true; }
+          zakkig.nixosModules.default
         ];
       };
     };

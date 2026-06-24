@@ -24,6 +24,8 @@
   boot.initrd.availableKernelModules =
     [ "ahci" "xhci_pci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod" "ext4" ];
 
+  services.vscode-server.enable = true;
+
   users.users = {
     root.hashedPassword = "!"; # Disable root login
     selim = {
@@ -32,31 +34,6 @@
       openssh.authorizedKeys.keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOoPbdeg6m8b7fWa6Og/yNespDkC69mj0frS1pfk0SxP selim@computer"
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID7Y2QfGe+ZIaz/HK13wP2QEeoJGpUhtlqaYMEDofqPa selim@laptop"
-      ];
-    };
-    daniil = {
-      isNormalUser = true;
-      group = "users";
-      homeMode = "770";
-      openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMsJHmi82YhxJd4f7Cmh5O0k5WkakyOn7o8b5JXqA4xM daniil@computer"
-      ];
-      packages = with pkgs; [ python3 asciiquarium ];
-    };
-    boris = {
-      isNormalUser = true;
-      group = "users";
-      homeMode = "770";
-      openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOhMNIBDVF0CY6eoCOQatiUzqKNUHr8vFJUaOqwRVCOf boris@computer"
-      ];
-    };
-    erkin = {
-      isNormalUser = true;
-      group = "users";
-      homeMode = "770";
-      openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL4DEcXxqjv6irSJMhkaovNbQ+swy8UHmb2l6dakp2nw erkin@computer"
       ];
     };
   };
@@ -73,32 +50,17 @@
   };
 
   systemd.services = {
-    latch-landing-page = {
-      description = "latch-landing-page";
-      wantedBy = [ "multi-user.target" ];
-      after = [ "network.target" ];
-
-      path = with pkgs; [ bash nodejs_22 ];
-
-      serviceConfig = {
-        User = "selim";
-        WorkingDirectory = "/opt/latch-landing-page";
-        ExecStart = "${pkgs.nodejs_22}/bin/npm run start";
-        Restart = "always";
-      };
-    };
-
     ws-landing-page = {
       description = "ws-landing-page";
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
 
-      path = with pkgs; [ bash nodejs_22 ];
+      path = with pkgs; [ bash nodejs ];
 
       serviceConfig = {
         User = "selim";
         WorkingDirectory = "/opt/ws-landing-page";
-        ExecStart = "${pkgs.nodejs_22}/bin/npm run start";
+        ExecStart = "${pkgs.nodejs}/bin/npm run start";
         Restart = "always";
       };
     };
@@ -108,14 +70,24 @@
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
 
-      path = with pkgs; [ bash nodejs_22 ];
+      path = with pkgs; [ bash nodejs ];
 
       serviceConfig = {
         User = "selim";
         WorkingDirectory = "/opt/trustolino-landing-page";
-        ExecStart = "${pkgs.nodejs_22}/bin/npm run start";
+        ExecStart = "${pkgs.nodejs}/bin/npm run start";
         Restart = "always";
       };
+    };
+  };
+
+  services.zakkig = {
+    enable = true;
+    user = "root";
+
+    environment = {
+      "PORT" = "4173";
+      "DATABASE_PATH" = "/var/lib/zakkig.db";
     };
   };
 
@@ -129,26 +101,6 @@
     '';
 
     virtualHosts = {
-      "latch-dating.de" = {
-        enableACME = true;
-        forceSSL = true;
-        globalRedirect = "www.latch-dating.de";
-      };
-
-      "www.latch-dating.de" = {
-        enableACME = true;
-        forceSSL = true;
-
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:3000";
-          proxyWebsockets = true;
-
-          extraConfig = ''
-            limit_req zone=perip burst=20 nodelay;
-          '';
-        };
-      };
-
       "ws-boardinghouse.de" = {
         enableACME = true;
         forceSSL = true;
@@ -188,6 +140,26 @@
           '';
         };
       };
+
+      "zakkig.de" = {
+        enableACME = true;
+        forceSSL = true;
+        globalRedirect = "www.zakkig.de";
+      };
+
+      "www.zakkig.de" = {
+        enableACME = true;
+        forceSSL = true;
+
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:3002";
+          proxyWebsockets = true;
+
+          extraConfig = ''
+            limit_req zone=perip burst=20 nodelay;
+          '';
+        };
+      };
     };
   };
 
@@ -195,18 +167,16 @@
     acceptTerms = true;
 
     certs = {
-      "latch-dating.de".email = "selim@latch-dating.de";
-      "www.latch-dating.de".email = "selim@latch-dating.de";
       "ws-boardinghouse.de".email = "info@ws-boardinghouse.de";
       "www.ws-boardinghouse.de".email = "info@ws-boardinghouse.de";
       "selimeser.de".email = "selim@selimeser.de";
       "www.selimeser.de".email = "selim@selimeser.de";
+      "zakkig.de".email = "selim@zakkig.de";
+      "www.zakkig.de".email = "selim@zakkig.de";
     };
   };
 
   networking.hostName = "selims-server";
 
   networking.firewall.allowedTCPPorts = [ 80 443 22 ];
-
-  system.stateVersion = "24.11";
 }
