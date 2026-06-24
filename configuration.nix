@@ -3,7 +3,7 @@
 {
   nix.settings = { experimental-features = "nix-command flakes"; };
 
-  environment.systemPackages = [ pkgs.git pkgs.nixfmt-classic ];
+  environment.systemPackages = [ pkgs.git pkgs.nixfmt ];
 
   fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";
@@ -179,4 +179,6 @@
   networking.hostName = "selims-server";
 
   networking.firewall.allowedTCPPorts = [ 80 443 22 ];
+
+  system.stateVersion = "26.11";
 }
