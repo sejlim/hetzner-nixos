@@ -110,11 +110,11 @@
         "nixpkgs": "nixpkgs_3"
       },
       "locked": {
-        "lastModified": 1782330399,
-        "narHash": "sha256-wbhyC1UuLn1oiz7zU1B8cbtiy/UlP7vsZlLVgkMl8Tg=",
+        "lastModified": 1782333320,
+        "narHash": "sha256-0Ss82WMQXKBeQ4AtroS/3lT3Cf6zWooa2KK7Y54mDUE=",
         "owner": "sejlim",
         "repo": "zakkig",
-        "rev": "6d5c260fcf056f1d99e0b8feeea8c2612f9d848a",
+        "rev": "1ab99c773dc26ed3f94c82e9c164d149443f1030",
         "type": "github"
       },
       "original": {
