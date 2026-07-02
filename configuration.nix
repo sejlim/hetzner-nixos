@@ -1,9 +1,14 @@
 { config, pkgs, ... }:
 
 {
-  nix.settings = { experimental-features = "nix-command flakes"; };
+  nix.settings = {
+    experimental-features = "nix-command flakes";
+  };
 
-  environment.systemPackages = [ pkgs.git pkgs.nixfmt ];
+  environment.systemPackages = [
+    pkgs.git
+    pkgs.nixfmt
+  ];
 
   fileSystems."/" = {
     device = "/dev/disk/by-label/nixos";
@@ -13,7 +18,7 @@
     device = "/dev/disk/by-label/boot";
     fsType = "ext4";
   };
-  swapDevices = [{ device = "/dev/disk/by-label/swap"; }];
+  swapDevices = [ { device = "/dev/disk/by-label/swap"; } ];
 
   time.timeZone = "Europe/Berlin";
   i18n.defaultLocale = "en_US.UTF-8";
@@ -21,8 +26,15 @@
 
   boot.loader.grub.enable = true;
   boot.loader.grub.device = "/dev/sda";
-  boot.initrd.availableKernelModules =
-    [ "ahci" "xhci_pci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod" "ext4" ];
+  boot.initrd.availableKernelModules = [
+    "ahci"
+    "xhci_pci"
+    "virtio_pci"
+    "virtio_scsi"
+    "sd_mod"
+    "sr_mod"
+    "ext4"
+  ];
 
   services.vscode-server.enable = true;
 
@@ -55,26 +67,14 @@
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
 
-      path = with pkgs; [ bash nodejs ];
+      path = with pkgs; [
+        bash
+        nodejs
+      ];
 
       serviceConfig = {
         User = "selim";
         WorkingDirectory = "/opt/ws-landing-page";
-        ExecStart = "${pkgs.nodejs}/bin/npm run start";
-        Restart = "always";
-      };
-    };
-
-    trustolino-landing-page = {
-      description = "trustolino-landing-page";
-      wantedBy = [ "multi-user.target" ];
-      after = [ "network.target" ];
-
-      path = with pkgs; [ bash nodejs ];
-
-      serviceConfig = {
-        User = "selim";
-        WorkingDirectory = "/opt/trustolino-landing-page";
         ExecStart = "${pkgs.nodejs}/bin/npm run start";
         Restart = "always";
       };
@@ -88,6 +88,17 @@
     environment = {
       "PORT" = "4173";
       "DATABASE_PATH" = "/var/lib/zakkig.db";
+    };
+  };
+
+  services.trustolino-landingpage = {
+    enable = true;
+    user = "root";
+
+    environment = {
+      "PORT" = "3002";
+      "DATABASE_PATH" = "/var/lib/trustolino_leads.db";
+      "VITE_COUNTDOWN_TARGET" = "2026-09-31T23:59:59Z";
     };
   };
 
@@ -178,7 +189,11 @@
 
   networking.hostName = "selims-server";
 
-  networking.firewall.allowedTCPPorts = [ 80 443 22 ];
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+    22
+  ];
 
   system.stateVersion = "26.11";
 }
