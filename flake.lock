@@ -145,11 +145,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1782513262,
-        "narHash": "sha256-h9cVCBlh3PRdZd10/6eZslh4EceTfW4FiPFzFcIKdfQ=",
+        "lastModified": 1782971933,
+        "narHash": "sha256-0xJghYu5PfazmTNIwkdhrtJQQHc/s+pK3S/v4TG38bk=",
         "owner": "sejlim",
         "repo": "zakkig",
-        "rev": "ec6c05c361dc1ed2c900e20b887bd8a1227639c3",
+        "rev": "0bcc94cd93dd03b360234afd356ec5465c9af16f",
         "type": "github"
       },
       "original": {
