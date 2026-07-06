@@ -108,11 +108,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1783350521,
-        "narHash": "sha256-u/dIh8jW9/hZglsrlxBsn3DvyVxFXDTczjRoqT9B9Pc=",
+        "lastModified": 1783356149,
+        "narHash": "sha256-rp+atoCTYNyCATLuSsR6iQJR6GztGQmnTmJpMl1Febc=",
         "owner": "sejlim",
         "repo": "trustolino-landingpage",
-        "rev": "eaabc29f40483b5b0d0f9aa15db6e0a644380909",
+        "rev": "2d67c3f50d7d1599d1f6d9cc4fede48aa82da918",
         "type": "github"
       },
       "original": {
