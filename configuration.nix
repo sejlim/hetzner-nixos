@@ -62,6 +62,24 @@
   };
 
   systemd.services = {
+    zakkig-landingpage = {
+      description = "zakkig-landingpage";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
+
+      path = with pkgs; [
+        bash
+        nodejs
+      ];
+
+      serviceConfig = {
+        User = "selim";
+        WorkingDirectory = "/opt/zakkig-landingpage";
+        ExecStart = "${pkgs.nodejs}/bin/npm run preview";
+        Restart = "always";
+      };
+    };
+
     ws-landing-page = {
       description = "ws-landing-page";
       wantedBy = [ "multi-user.target" ];
@@ -78,16 +96,6 @@
         ExecStart = "${pkgs.nodejs}/bin/npm run start";
         Restart = "always";
       };
-    };
-  };
-
-  services.zakkig = {
-    enable = true;
-    user = "root";
-
-    environment = {
-      "PORT" = "4173";
-      "DATABASE_PATH" = "/var/lib/zakkig.db";
     };
   };
 
@@ -112,6 +120,26 @@
     '';
 
     virtualHosts = {
+      "zakkig.de" = {
+        enableACME = true;
+        forceSSL = true;
+        globalRedirect = "www.zakkig.de";
+      };
+
+      "www.zakkig.de" = {
+        enableACME = true;
+        forceSSL = true;
+
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:3000";
+          proxyWebsockets = true;
+
+          extraConfig = ''
+            limit_req zone=perip burst=20 nodelay;
+          '';
+        };
+      };
+
       "ws-boardinghouse.de" = {
         enableACME = true;
         forceSSL = true;
@@ -151,26 +179,6 @@
           '';
         };
       };
-
-      "zakkig.de" = {
-        enableACME = true;
-        forceSSL = true;
-        globalRedirect = "www.zakkig.de";
-      };
-
-      "www.zakkig.de" = {
-        enableACME = true;
-        forceSSL = true;
-
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:4173";
-          proxyWebsockets = true;
-
-          extraConfig = ''
-            limit_req zone=perip burst=20 nodelay;
-          '';
-        };
-      };
     };
   };
 
@@ -178,12 +186,12 @@
     acceptTerms = true;
 
     certs = {
+      "zakkig.de".email = "selim@zakkig.de";
+      "www.zakkig.de".email = "selim@zakkig.de";
       "ws-boardinghouse.de".email = "info@ws-boardinghouse.de";
       "www.ws-boardinghouse.de".email = "info@ws-boardinghouse.de";
       "selimeser.de".email = "selim@selimeser.de";
       "www.selimeser.de".email = "selim@selimeser.de";
-      "zakkig.de".email = "selim@zakkig.de";
-      "www.zakkig.de".email = "selim@zakkig.de";
     };
   };
 
