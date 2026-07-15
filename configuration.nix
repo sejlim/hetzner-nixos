@@ -62,8 +62,8 @@
   };
 
   systemd.services = {
-    zakkig = {
-      description = "zakkig";
+    zakkig-website = {
+      description = "zakkig-website";
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
 
@@ -74,7 +74,7 @@
 
       serviceConfig = {
         User = "selim";
-        WorkingDirectory = "/opt/zakkig";
+        WorkingDirectory = "/opt/zakkig/apps/website";
         ExecStart = "${pkgs.nodejs_24}/bin/npm run start";
         Restart = "always";
       };
