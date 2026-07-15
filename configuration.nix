@@ -62,20 +62,20 @@
   };
 
   systemd.services = {
-    zakkig-landingpage = {
-      description = "zakkig-landingpage";
+    zakkig = {
+      description = "zakkig";
       wantedBy = [ "multi-user.target" ];
       after = [ "network.target" ];
 
       path = with pkgs; [
         bash
-        nodejs
+        nodejs_24
       ];
 
       serviceConfig = {
         User = "selim";
-        WorkingDirectory = "/opt/zakkig-landingpage";
-        ExecStart = "${pkgs.nodejs}/bin/npm run preview";
+        WorkingDirectory = "/opt/zakkig";
+        ExecStart = "${pkgs.nodejs_24}/bin/npm run start";
         Restart = "always";
       };
     };
